@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPLv2
+// SPDX-License-Identifier: GPLv3
 
 use clap::Parser;
 use instant::Instant;
@@ -26,7 +26,7 @@ struct Cli {
     maximized: bool,
 
     // Cycle time between site reloads (if more then one URL was given), in seconds
-    #[arg(long, short, default_value_t = 10, help = "Cycle time between site reloads (if more then one URL was given), in seconds", group = "options")]
+    #[arg(long, short, default_value_t = 10, help = "Cycle time between site reloads (if more then one URL was given), in seconds")]
     cycle_sec: u64,
 }
 
