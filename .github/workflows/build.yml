@@ -1,0 +1,69 @@
+name: build
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { target: x86_64-pc-windows-msvc, os: windows-latest }
+          - { target: x86_64-unknown-linux-gnu, os: ubuntu-latest }
+          - { target: x86_64-apple-darwin, os: macos-latest }
+          - { target: aarch64-apple-ios, os: macos-latest }
+          - { target: aarch64-apple-darwin, os: macos-14 }
+          - { target: aarch64-linux-android, os: ubuntu-latest }
+
+    runs-on: ${{ matrix.platform.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: install stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform.target }}
+
+      - name: install webkit2gtk (ubuntu only)
+        if: contains(matrix.platform.target, 'gnu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev
+
+      - name: install webview2 (windows only)
+        if: contains(matrix.platform.target, 'windows')
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://go.microsoft.com/fwlink/p/?LinkId=2124703 -OutFile installwebview.exe -UseBasicParsing
+          cmd /C start /wait installwebview.exe /silent /install
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: build publicviewing-cli
+        if: (!contains(matrix.platform.target, 'android'))
+        run: cargo build --target ${{ matrix.platform.target }}
+
+      - name: build tests and examples
+        shell: bash
+        if: (!contains(matrix.platform.target, 'android') && !contains(matrix.platform.target, 'ios'))
+        run: cargo test --no-run --verbose --target ${{ matrix.platform.target }}
+
+      - name: run tests
+        if: (!contains(matrix.platform.target, 'android') && !contains(matrix.platform.target, 'ios'))
+        run: cargo test --verbose --target ${{ matrix.platform.target }}
+
+      - name: install nightly
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: ${{ matrix.platform.target }}
+          components: miri
+
+      - name: Run tests with miri
+        if: (!contains(matrix.platform.target, 'android') && !contains(matrix.platform.target, 'ios'))
+        run: cargo +nightly miri test --verbose --target ${{ matrix.platform.target }}
+
+
