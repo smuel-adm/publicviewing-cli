@@ -50,8 +50,27 @@ fn main() -> wry::Result<()> {
         window.set_fullscreen(Some(Fullscreen::Borderless(None)));
     }
 
+    #[cfg(any(
+        target_os = "windows",
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "android"
+    ))]
     let builder = WebViewBuilder::new(&window);
 
+    #[cfg(not(any(
+        target_os = "windows",
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "android"
+    )))]
+    let builder = {
+    use tao::platform::unix::WindowExtUnix;
+    use wry::WebViewBuilderExtUnix;
+    let vbox = window.default_vbox().unwrap();
+    WebViewBuilder::new_gtk(vbox)
+    };
+    
     let webview = builder.with_url(&start_url)?.build()?;
 
     let timer_length = Duration::new(cli.cycle_sec, 0);
