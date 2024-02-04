@@ -55,7 +55,3 @@ jobs:
       - name: run tests
         if: (!contains(matrix.platform.target, 'android') && !contains(matrix.platform.target, 'ios'))
         run: cargo test --verbose --target ${{ matrix.platform.target }}
-
-
-
-
