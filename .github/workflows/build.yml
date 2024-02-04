@@ -56,6 +56,18 @@ jobs:
         if: (!contains(matrix.platform.target, 'android') && !contains(matrix.platform.target, 'ios'))
         run: cargo test --verbose --target ${{ matrix.platform.target }}
 
+<<<<<<< HEAD
 
+=======
+      - name: install nightly
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: ${{ matrix.platform.target }}
+          components: miri
+
+      - name: Run tests with miri
+        if: (!contains(matrix.platform.target, 'android') && !contains(matrix.platform.target, 'ios'))
+        run: cargo +nightly miri test --verbose --target ${{ matrix.platform.target }}
+>>>>>>> 89b70fb (Add some workflow files (#2))
 
 
