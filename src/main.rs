@@ -6,7 +6,8 @@ use std::time::Duration;
 use tao::{
     event::{Event, StartCause, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
+    monitor::MonitorHandle,
+    window::{Window, WindowBuilder},
 };
 use wry::WebViewBuilder;
 
@@ -16,6 +17,13 @@ struct Cli {
     /// Optional url(s) to open,
     #[arg(default_values_t = vec!["https://google.com".to_string()])]
     urls: Vec<String>,
+
+    // Monitor number on which the window should open, no effect if you have only one monitor!
+    #[arg(
+        long,
+        help = "Monitor number on which the window should open, no effect if you have only one monitor! (only on Windows OS)"
+    )]
+    monitor: Option<usize>,
 
     // Open window in fullscreen
     #[arg(long, short, help = "Open window in fullscreen", group = "options")]
@@ -33,6 +41,21 @@ struct Cli {
         help = "Cycle time between site reloads (if more then one URL was given), in seconds"
     )]
     cycle_sec: u64,
+}
+
+// Multi monitor support
+// FIXME: redesign need; move into submodule
+fn move_window_to_other_monitor(window: &Window, i: usize) -> wry::Result<()> {
+    let monitors: Vec<MonitorHandle> = window.available_monitors().collect();
+    //dbg!(&monitors);
+    let monitor = monitors.get(i).unwrap();
+
+    let pos = monitor.position();
+    dbg!(pos);
+
+    window.set_outer_position(tao::dpi::PhysicalPosition { x: pos.x, y: pos.y });
+
+    Ok(())
 }
 
 fn main() -> wry::Result<()> {
@@ -53,6 +76,10 @@ fn main() -> wry::Result<()> {
     if cli.fullscreen {
         use tao::window::Fullscreen;
         window.set_fullscreen(Some(Fullscreen::Borderless(None)));
+    }
+
+    if let Some(monitor) = cli.monitor {
+        move_window_to_other_monitor(&window, monitor)?;
     }
 
     #[cfg(any(
