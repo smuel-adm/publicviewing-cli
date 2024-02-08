@@ -28,6 +28,10 @@ struct Cli {
     #[arg(long, short, help = "Open window in fullscreen", group = "options")]
     fullscreen: bool,
 
+    // Window will always be above other windows
+    #[arg(long, short, help = "Window will always be above other windows")]
+    above: bool,
+
     // Open window maximized
     #[arg(long, short, help = "Open window maximized", group = "options")]
     maximized: bool,
@@ -74,6 +78,10 @@ fn main() -> wry::Result<()> {
     if cli.fullscreen {
         use tao::window::Fullscreen;
         window.set_fullscreen(Some(Fullscreen::Borderless(None)));
+    }
+
+    if cli.above {
+        window.set_always_on_bottom(true);
     }
 
     #[cfg(any(
