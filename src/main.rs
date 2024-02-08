@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPLv3
-
 use clap::Parser;
 use instant::Instant;
 use std::time::Duration;
@@ -44,15 +43,10 @@ struct Cli {
 }
 
 // Multi monitor support
-// FIXME: redesign need; move into submodule
 fn move_window_to_other_monitor(window: &Window, i: usize) -> wry::Result<()> {
     let monitors: Vec<MonitorHandle> = window.available_monitors().collect();
-    //dbg!(&monitors);
-    let monitor = monitors.get(i).unwrap();
-
+    let monitor = monitors.get(i).expect("Monitor not found");
     let pos = monitor.position();
-    dbg!(pos);
-
     window.set_outer_position(tao::dpi::PhysicalPosition { x: pos.x, y: pos.y });
 
     Ok(())
@@ -63,11 +57,15 @@ fn main() -> wry::Result<()> {
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
-    window.set_title("[Astemo] PublicViewing - Cli");
+    window.set_title("PublicViewing - Cli");
 
     let num_urls = cli.urls.len();
     let mut urls = cli.urls.clone().into_iter().cycle();
     let start_url = urls.next().unwrap();
+
+    if let Some(monitor) = cli.monitor {
+        move_window_to_other_monitor(&window, monitor)?;
+    }
 
     if cli.maximized {
         window.set_maximized(true);
@@ -76,10 +74,6 @@ fn main() -> wry::Result<()> {
     if cli.fullscreen {
         use tao::window::Fullscreen;
         window.set_fullscreen(Some(Fullscreen::Borderless(None)));
-    }
-
-    if let Some(monitor) = cli.monitor {
-        move_window_to_other_monitor(&window, monitor)?;
     }
 
     #[cfg(any(
@@ -108,8 +102,8 @@ fn main() -> wry::Result<()> {
     let timer_length = Duration::new(cli.cycle_sec, 0);
 
     event_loop.run(move |event, _, control_flow| {
-        // If we have only one url no control flows (timers and such) are required
-        // this disables the match event block below complete.
+        // If we have only one url no control flows (timers and such) are required.
+        // This disables the match event block below complete.
         if num_urls == 1 {
             *control_flow = ControlFlow::Wait;
         }
