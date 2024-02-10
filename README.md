@@ -3,12 +3,22 @@
 Small command line application that displays one or many given URLs
 in a OS native WebView.
 
+[![](https://github.com/smuel-adm/publicviewing-cli/actions/workflows/build.yml/badge.svg)](https://github.com/smuel-adm/publicviewing-cli/actions)
+[![](https://github.com/smuel-adm/publicviewing-cli/actions/workflows/release.yml/badge.svg)](https://github.com/smuel-adm/publicviewing-cli/releases)
+
+
+# Usage
+
 ![](res/publicviewing-running.gif)
 
 Use command line argument `-h` for description of all parameters.
 
 ![](res/command-line-example.png)
 
+
+# Installation
+
+Visit [releases] page
 
 # Dependencies
 
@@ -26,3 +36,6 @@ On older systems it might be also necessary to install Microsoft's WebView2 Runt
 # License
 
 **GPL-3.0-or-later**
+
+
+[releases]: https://github.com/smuel-adm/publicviewing-cli/releases
