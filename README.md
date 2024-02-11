@@ -9,40 +9,52 @@ in a OS native WebView.
 
 ## Usage
 
-Execute the application from the commandline with one URL as argument.
+The following example executes the application with one URL as argument.
 
 ```
 publicviewing-cli https://blog.fefe.de
 ```
 
 If you give more then one URL as argument the URL's are cycled each 10 seconds.
-
-This can be tuned with the `--cycle-sec` parameter.
+The cycle time can be tuned with the `--cycle-sec` parameter.
 
 ```
 publicviewing-cli https://blog.fefe.de https://zzeroo.com https://bbc.co.uk --cycle-sec 2
 ```
 
 
-The parameters `--fullscreen` or `--maximized--maximized` can be used to control the window start behavior.
-
+The parameters `--fullscreen` or `--maximized` can be used to control the window start behavior.
 To send the window to a specific monitor screen use the `--monitor` paramter.
-
 
 ![](res/publicviewing-running.gif)
 
 Use command line argument `--help` for description of all parameters.
 
-![](res/command-line-example.png)
+```
+Usage: publicviewing-cli.exe [OPTIONS] [URLS]...
 
+Arguments:
+  [URLS]...  Optional url(s) to open, space separated [default: https://google.com]
+
+Options:
+  -a, --above                  window will always be above other windows
+  -c, --cycle-sec <CYCLE_SEC>  cycle time between site reloads
+                                   if more then one URL was given
+                                   these URL's are cycled after that time [default: 10]
+  -f, --fullscreen             open window in fullscreen
+  -m, --maximized              open window maximized
+      --monitor <MONITOR>      monitor number on which the window should open
+                                   This has no effect if you have only one monitor!
+                                   Android / Linux(Wayland): Unsupported
+  -h, --help                   Print help
+  -V, --version                Print version
+  ```
 
 ## Installation
 
 Visit the projects [releases] page and download the packaged application that meets your OS.
-
 Extract the archive, in the subfolder `publicviewing-cli` you'll find the application `publicviewing-cli` or `publicviewing-cl.exe`, depends on your operation system.
-
-Execute the application direct or put them in a PATH enabled location.
+Then execute the application or put them in a PATH enabled location.
 
 ## Dependencies
 
