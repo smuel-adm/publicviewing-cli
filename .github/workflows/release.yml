@@ -61,5 +61,6 @@ jobs:
           overwrite: true
           file: ${{ matrix.asset_name }}
           asset_name: ${{ matrix.asset_name }}
-          tag: ${{ github.ref }}
+          release_name: ${{  github.ref_name }}
+
 
