@@ -13,37 +13,33 @@ use wry::WebViewBuilder;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// Optional url(s) to open,
+    /// Optional url(s) to open, space separated
     #[arg(default_values_t = vec!["https://google.com".to_string()])]
     urls: Vec<String>,
 
-    // Monitor number on which the window should open, no effect if you have only one monitor!
-    #[arg(
-        long,
-        help = "Monitor number on which the window should open, no effect if you have only one monitor! (only on Windows OS)"
-    )]
-    monitor: Option<usize>,
-
-    // Open window in fullscreen
-    #[arg(long, short, help = "Open window in fullscreen", group = "options")]
-    fullscreen: bool,
-
-    // Window will always be above other windows
-    #[arg(long, short, help = "Window will always be above other windows")]
+    /// window will always be above other windows
+    #[arg(long, short)]
     above: bool,
 
-    // Open window maximized
-    #[arg(long, short, help = "Open window maximized", group = "options")]
+    /// cycle time between site reloads
+    ///     if more then one URL was given
+    ///     these URL's are cycled after that time
+    #[arg(long, short, verbatim_doc_comment, default_value_t = 10)]
+    cycle_sec: u64,
+
+    /// open window in fullscreen
+    #[arg(long, short, group = "options")]
+    fullscreen: bool,
+
+    /// open window maximized
+    #[arg(long, short, group = "options")]
     maximized: bool,
 
-    // Cycle time between site reloads (if more then one URL was given), in seconds
-    #[arg(
-        long,
-        short,
-        default_value_t = 10,
-        help = "Cycle time between site reloads (if more then one URL was given), in seconds"
-    )]
-    cycle_sec: u64,
+    /// monitor number on which the window should open
+    ///     This has no effect if you have only one monitor!
+    ///     Android / Linux(Wayland): Unsupported
+    #[arg(long, verbatim_doc_comment)]
+    monitor: Option<usize>,
 }
 
 // Multi monitor support
@@ -81,7 +77,7 @@ fn main() -> wry::Result<()> {
     }
 
     if cli.above {
-        window.set_always_on_bottom(true);
+        window.set_always_on_top(true);
     }
 
     #[cfg(any(
