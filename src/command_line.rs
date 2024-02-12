@@ -1,13 +1,13 @@
 use instant::Instant;
 
+use anyhow::Context;
+use std::time::Duration;
 use tao::{
-    event::{Event,StartCause, WindowEvent},
-    event_loop::{EventLoop, ControlFlow},
+    event::{Event, StartCause, WindowEvent},
+    event_loop::{ControlFlow, EventLoop},
     monitor::MonitorHandle,
     window::{Window, WindowBuilder},
 };
-use anyhow::Context;
-use std::time::Duration;
 
 use wry::WebViewBuilder;
 
@@ -92,7 +92,6 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         }
     });
 }
-
 
 // Multi monitor support
 pub(crate) fn move_window_to_other_monitor(window: &Window, i: usize) -> Result<()> {

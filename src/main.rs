@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPLv3
 mod command_line;
 
+use crate::command_line::run;
 use anyhow::Result;
 use clap::Parser;
-use crate::command_line::run;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -36,7 +36,6 @@ pub struct Cli {
     #[arg(long, verbatim_doc_comment)]
     monitor: Option<usize>,
 }
-
 
 fn main() -> Result<()> {
     let args = Cli::parse();
