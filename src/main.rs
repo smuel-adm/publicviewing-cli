@@ -7,7 +7,7 @@ use clap::Parser;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
-pub struct Cli {
+struct Cli {
     /// Optional url(s) to open, space separated
     #[arg(default_values_t = vec!["https://google.com".to_string()])]
     urls: Vec<String>,
