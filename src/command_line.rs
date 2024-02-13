@@ -9,9 +9,8 @@ use tao::{
     window::{Window, WindowBuilder},
 };
 
-use wry::WebViewBuilder;
-
 use anyhow::Result;
+use wry::WebViewBuilder;
 
 use super::Cli;
 
@@ -64,32 +63,32 @@ pub(crate) fn run(args: Cli) -> Result<()> {
 
     let webview = builder.with_url(&start_url)?.build()?;
 
-    let timer_length = Duration::new(args.cycle_sec, 0);
+    let (cycle_sec, timer_length) = match args.cycle_sec {
+        Some(length) => (length, Duration::new(length, 0)),
+        None => (0, Duration::new(0, 0)),
+    };
 
-    event_loop.run(move |event, _, control_flow| {
-        // If we have only one url no control flows (timers and such) are required.
-        // This disables the match event block below complete.
-        if num_urls == 1 {
-            *control_flow = ControlFlow::Wait;
+    event_loop.run(move |event, _, control_flow| match event {
+        Event::NewEvents(StartCause::Init) => {
+            *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length)
         }
+        Event::NewEvents(StartCause::ResumeTimeReached { .. }) => {
+            *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length);
+            let url = urls.next().unwrap();
+            let current_url = webview.url();
 
-        match event {
-            Event::NewEvents(StartCause::Init) => {
-                *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length)
-            }
-            Event::NewEvents(StartCause::ResumeTimeReached { .. }) => {
-                *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length);
-                if num_urls > 1 {
-                    let url = urls.next().unwrap();
-                    webview.load_url(&url);
+            if cycle_sec > 0 {
+                match num_urls {
+                    1 => webview.load_url(current_url.as_ref()),
+                    _ => webview.load_url(&url),
                 }
             }
-            Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                ..
-            } => *control_flow = ControlFlow::Exit,
-            _ => (),
         }
+        Event::WindowEvent {
+            event: WindowEvent::CloseRequested,
+            ..
+        } => *control_flow = ControlFlow::Exit,
+        _ => (),
     });
 }
 
