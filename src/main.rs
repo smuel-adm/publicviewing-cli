@@ -17,10 +17,11 @@ struct Cli {
     above: bool,
 
     /// cycle time between site reloads
-    ///     if more then one URL was given
-    ///     these URL's are cycled after that time
-    #[arg(long, short, verbatim_doc_comment, default_value_t = 10)]
-    cycle_sec: u64,
+    ///     If more then one URL was given you should set this argument
+    ///     the URL's are cycled after that time.
+    ///     If only one URL was given the current url is reloaded after that time.
+    #[arg(long, short, verbatim_doc_comment)]
+    cycle_sec: Option<u64>,
 
     /// open window in fullscreen
     #[arg(long, short, group = "options")]
