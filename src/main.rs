@@ -41,7 +41,8 @@ fn main() -> Result<()> {
     let args = Cli::parse();
 
     if let Err(err) = run(args) {
-        println!("{:?}", err);
+        eprintln!("{:?}", err);
+        err.chain().skip(1).for_each(|cause| eprintln!("because: {}", cause));
         std::process::exit(1);
     }
 
