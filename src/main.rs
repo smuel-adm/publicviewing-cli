@@ -42,7 +42,9 @@ fn main() -> Result<()> {
 
     if let Err(err) = run(args) {
         eprintln!("{:?}", err);
-        err.chain().skip(1).for_each(|cause| eprintln!("because: {}", cause));
+        err.chain()
+            .skip(1)
+            .for_each(|cause| eprintln!("because: {}", cause));
         std::process::exit(1);
     }
 
