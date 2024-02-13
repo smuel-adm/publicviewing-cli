@@ -7,18 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Code refactored, modulized
+- Improved error handling
+
+
 ## [1.1.0] - 2024-02-11
 
 ### Added
 
-- Multi monitor support
-- Keep windows always on top parameter
+- Multi monitor support `--monitor`
+- Keep windows always on top parameter `-a, --above`
 - Linux support
 
 ### Fixed
 
 - Error handling
-- Formating with `cargo fmt`
+- Formatting with `cargo fmt`
 
 ## [1.0.0] - 2024-02-03
 

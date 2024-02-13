@@ -73,5 +73,13 @@ On older systems it might be also necessary to install Microsoft's WebView2 Runt
 
 **GPL-3.0-or-later**
 
+## Contributing
+
+Contributions are always welcome!
+Please make sure to utilize before sending pull requests against our `development` branch:
+
+* `cargo fmt` for formatting
+* [clippy](https://github.com/rust-lang/rust-clippy)
+
 
 [releases]: https://github.com/smuel-adm/publicviewing-cli/releases
