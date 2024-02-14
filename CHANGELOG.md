@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.2.0] - 2024-02-14
+
 ### Added
 
-- refactor cyle_sec paramter
-- Code refactored, modulized
-- Improved error handling
+- refactor cycle_sec parameter
+- The code has been modularized
+- improved error handling
+
+### Fixed
+
+- lots of typos
+- `cargo fmt` github action
 
 
 ## [1.1.0] - 2024-02-11
@@ -26,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Error handling
 - Formatting with `cargo fmt`
+
 
 ## [1.0.0] - 2024-02-03
 
