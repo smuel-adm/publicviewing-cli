@@ -32,7 +32,7 @@ publicviewing-cli https://blog.fefe.de https://zzeroo.com https://bbc.co.uk --cy
 The parameters `--fullscreen` or `--maximized` can be used to control the 
 start behavior of the WebView2 window.
 To send the window to a specific monitor screen use the `--monitor` parameter.  
-Use the option `--above´ tries to keep the WebView window above all other windows.
+Use the option `--above` to keep the WebView window above all other windows.
 
 ![](res/publicviewing-running.gif)
 
