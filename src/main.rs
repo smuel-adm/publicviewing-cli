@@ -1,108 +1,53 @@
 // SPDX-License-Identifier: GPLv3
+mod command_line;
 
+use crate::command_line::run;
+use anyhow::Result;
 use clap::Parser;
-use instant::Instant;
-use std::time::Duration;
-use tao::{
-    event::{Event, StartCause, WindowEvent},
-    event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
-};
-use wry::WebViewBuilder;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// Optional url(s) to open,
+    /// Optional url(s) to open, space separated
     #[arg(default_values_t = vec!["https://google.com".to_string()])]
     urls: Vec<String>,
 
-    // Open window in fullscreen
-    #[arg(long, short, help = "Open window in fullscreen", group = "options")]
+    /// window will always be above other windows
+    #[arg(long, short)]
+    above: bool,
+
+    /// cycle time between site reloads
+    ///     If more then one URL was given you should set this argument
+    ///     the URL's are cycled after that time.
+    ///     If only one URL was given the current url is reloaded after that time.
+    #[arg(long, short, verbatim_doc_comment)]
+    cycle_sec: Option<u64>,
+
+    /// open window in fullscreen
+    #[arg(long, short, group = "options")]
     fullscreen: bool,
 
-    // Open window maximized
-    #[arg(long, short, help = "Open window maximized", group = "options")]
+    /// open window maximized
+    #[arg(long, short, group = "options")]
     maximized: bool,
 
-    // Cycle time between site reloads (if more then one URL was given), in seconds
-    #[arg(
-        long,
-        short,
-        default_value_t = 10,
-        help = "Cycle time between site reloads (if more then one URL was given), in seconds"
-    )]
-    cycle_sec: u64,
+    /// monitor number on which the window should open
+    ///     This has no effect if you have only one monitor!
+    ///     Android / Linux(Wayland): Unsupported
+    #[arg(long, verbatim_doc_comment)]
+    monitor: Option<usize>,
 }
 
-fn main() -> wry::Result<()> {
-    let cli = Cli::parse();
+fn main() -> Result<()> {
+    let args = Cli::parse();
 
-    let event_loop = EventLoop::new();
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
-    window.set_title("[Astemo] PublicViewing - Cli");
-
-    let num_urls = cli.urls.len();
-    let mut urls = cli.urls.clone().into_iter().cycle();
-    let start_url = urls.next().unwrap();
-
-    if cli.maximized {
-        window.set_maximized(true);
+    if let Err(err) = run(args) {
+        eprintln!("{:?}", err);
+        err.chain()
+            .skip(1)
+            .for_each(|cause| eprintln!("because: {}", cause));
+        std::process::exit(1);
     }
 
-    if cli.fullscreen {
-        use tao::window::Fullscreen;
-        window.set_fullscreen(Some(Fullscreen::Borderless(None)));
-    }
-
-    #[cfg(any(
-        target_os = "windows",
-        target_os = "macos",
-        target_os = "ios",
-        target_os = "android"
-    ))]
-    let builder = WebViewBuilder::new(&window);
-
-    #[cfg(not(any(
-        target_os = "windows",
-        target_os = "macos",
-        target_os = "ios",
-        target_os = "android"
-    )))]
-    let builder = {
-        use tao::platform::unix::WindowExtUnix;
-        use wry::WebViewBuilderExtUnix;
-        let vbox = window.default_vbox().unwrap();
-        WebViewBuilder::new_gtk(vbox)
-    };
-
-    let webview = builder.with_url(&start_url)?.build()?;
-
-    let timer_length = Duration::new(cli.cycle_sec, 0);
-
-    event_loop.run(move |event, _, control_flow| {
-        // If we have only one url no control flows (timers and such) are required
-        // this disables the match event block below complete.
-        if num_urls == 1 {
-            *control_flow = ControlFlow::Wait;
-        }
-
-        match event {
-            Event::NewEvents(StartCause::Init) => {
-                *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length)
-            }
-            Event::NewEvents(StartCause::ResumeTimeReached { .. }) => {
-                *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length);
-                if num_urls > 1 {
-                    let url = urls.next().unwrap();
-                    webview.load_url(&url);
-                }
-            }
-            Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                ..
-            } => *control_flow = ControlFlow::Exit,
-            _ => (),
-        }
-    });
+    Ok(())
 }
