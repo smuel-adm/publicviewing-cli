@@ -23,6 +23,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - update dependencies (anyhow, clap, instant, tao and wry )
 
+## [1.3.1] - 2024-11-11
+
+### Fixed
+
+- missing Changelog from v1.3.0
+
+
+## [1.3.0] - 2024-11-11
+
+### Added
+
+- update dependencies (anyhow, clap, instant, tao and wry )
+
 
 ## [1.2.0] - 2024-02-14
 
