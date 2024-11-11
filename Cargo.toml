@@ -7,6 +7,6 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.93"
 clap = { version = "4.5.20", features = ["derive"] }
+instant = "0.1.13"
 wry = "0.35.2"
 tao = "0.23"
-instant = "0.1.12"
