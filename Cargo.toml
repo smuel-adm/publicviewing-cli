@@ -8,5 +8,5 @@ edition = "2021"
 anyhow = "1.0.93"
 clap = { version = "4.5.20", features = ["derive"] }
 instant = "0.1.13"
-wry = "0.35.2"
-tao = "0.23"
+tao = "0.30.6"
+wry = "0.47.0"

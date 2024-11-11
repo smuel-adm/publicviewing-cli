@@ -16,11 +16,13 @@ use super::Cli;
 
 pub(crate) fn run(args: Cli) -> Result<()> {
     let event_loop = EventLoop::new();
+    // FIXME: remove unwrap()
     let window = WindowBuilder::new().build(&event_loop).unwrap();
     window.set_title("PublicViewing - Cli");
 
     let num_urls = args.urls.len();
     let mut urls = args.urls.clone().into_iter().cycle();
+    // FIXME: remove unwrap()
     let start_url = urls.next().unwrap();
 
     if let Some(monitor) = args.monitor {
@@ -46,7 +48,7 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         target_os = "ios",
         target_os = "android"
     ))]
-    let builder = WebViewBuilder::new(&window);
+    let builder = WebViewBuilder::new();
 
     #[cfg(not(any(
         target_os = "windows",
@@ -61,7 +63,7 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         WebViewBuilder::new_gtk(vbox)
     };
 
-    let webview = builder.with_url(&start_url)?.build()?;
+    let webview = builder.with_url(&start_url).build(&window)?;
 
     let (cycle_sec, timer_length) = match args.cycle_sec {
         Some(length) => (length, Duration::new(length, 0)),
@@ -75,12 +77,14 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         Event::NewEvents(StartCause::ResumeTimeReached { .. }) => {
             *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length);
             let url = urls.next().unwrap();
-            let current_url = webview.url();
+            let current_url = webview.url().unwrap();
 
             if cycle_sec > 0 {
                 match num_urls {
-                    1 => webview.load_url(current_url.as_ref()),
-                    _ => webview.load_url(&url),
+                    1 => webview
+                        .load_url(current_url.as_ref())
+                        .expect("Load `current_url`"),
+                    _ => webview.load_url(&url).expect("load `url`"),
                 }
             }
         }
