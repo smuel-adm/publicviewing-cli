@@ -42,13 +42,15 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         window.set_always_on_top(true);
     }
 
+    let builder = WebViewBuilder::new().with_url(&start_url);
+
     #[cfg(any(
         target_os = "windows",
         target_os = "macos",
         target_os = "ios",
         target_os = "android"
     ))]
-    let builder = WebViewBuilder::new();
+    let webview = builder.build(&window)?;
 
     #[cfg(not(any(
         target_os = "windows",
@@ -56,14 +58,14 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         target_os = "ios",
         target_os = "android"
     )))]
-    let builder = {
+    let webview = {
         use tao::platform::unix::WindowExtUnix;
         use wry::WebViewBuilderExtUnix;
         let vbox = window.default_vbox().unwrap();
-        WebViewBuilder::new_gtk(vbox)
+        builder.build_gtk(vbox)?
     };
 
-    let webview = builder.with_url(&start_url).build(&window)?;
+    //    let webview = builder.with_url(&start_url).build(&window)?;
 
     let (cycle_sec, timer_length) = match args.cycle_sec {
         Some(length) => (length, Duration::new(length, 0)),
