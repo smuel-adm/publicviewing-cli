@@ -9,6 +9,7 @@ use tao::{
     window::{Window, WindowBuilder},
 };
 
+use anyhow::anyhow;
 use anyhow::Result;
 use wry::WebViewBuilder;
 
@@ -16,14 +17,14 @@ use super::Cli;
 
 pub(crate) fn run(args: Cli) -> Result<()> {
     let event_loop = EventLoop::new();
-    // FIXME: remove unwrap()
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
+    let window = WindowBuilder::new().build(&event_loop)?;
     window.set_title("PublicViewing - Cli");
 
     let num_urls = args.urls.len();
     let mut urls = args.urls.clone().into_iter().cycle();
-    // FIXME: remove unwrap()
-    let start_url = urls.next().unwrap();
+    let start_url = urls
+        .next()
+        .ok_or(anyhow!("`start_url` could not read as String"))?;
 
     if let Some(monitor) = args.monitor {
         move_window_to_other_monitor(&window, monitor)?;
@@ -99,7 +100,7 @@ pub(crate) fn run(args: Cli) -> Result<()> {
 }
 
 // Multi monitor support
-pub(crate) fn move_window_to_other_monitor(window: &Window, i: usize) -> Result<()> {
+fn move_window_to_other_monitor(window: &Window, i: usize) -> Result<()> {
     let monitors: Vec<MonitorHandle> = window.available_monitors().collect();
     let monitor = monitors
         .get(i)

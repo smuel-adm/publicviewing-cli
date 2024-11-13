@@ -1,7 +1,6 @@
 [package]
 name = "publicviewing-cli"
 description = "Small command line application that displays one or many given URLs in a OS native WebView"
-license = "GPL-3.0-or-later"
 license-file = "LICENSE"
 documentation = "https://github.com/smuel-adm/publicviewing-cli"
 homepage = "https://github.com/smuel-adm/publicviewing-cli"
@@ -16,3 +15,6 @@ clap = { version = "4.5.20", features = ["derive"] }
 instant = "0.1.13"
 tao = "0.30.6"
 wry = "0.47.0"
+
+[profile.release]
+lto = true
