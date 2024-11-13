@@ -22,7 +22,9 @@ pub(crate) fn run(args: Cli) -> Result<()> {
 
     let num_urls = args.urls.len();
     let mut urls = args.urls.clone().into_iter().cycle();
-    let start_url = urls.next().ok_or(anyhow!("`start_url` could not read as String"))?;
+    let start_url = urls
+        .next()
+        .ok_or(anyhow!("`start_url` could not read as String"))?;
 
     if let Some(monitor) = args.monitor {
         move_window_to_other_monitor(&window, monitor)?;
