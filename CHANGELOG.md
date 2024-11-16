@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [1.3.3] - 2024-11-16
+
+### Fixed
+
+- Use `use std::time::Instant` instead of instant crate
+
 
 ## [1.3.2] - 2024-11-13
 

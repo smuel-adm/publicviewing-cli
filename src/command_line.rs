@@ -1,7 +1,6 @@
-use instant::Instant;
-
 use anyhow::Context;
 use std::time::Duration;
+use std::time::Instant;
 use tao::{
     event::{Event, StartCause, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -65,8 +64,6 @@ pub(crate) fn run(args: Cli) -> Result<()> {
         let vbox = window.default_vbox().unwrap();
         builder.build_gtk(vbox)?
     };
-
-    //    let webview = builder.with_url(&start_url).build(&window)?;
 
     let (cycle_sec, timer_length) = match args.cycle_sec {
         Some(length) => (length, Duration::new(length, 0)),

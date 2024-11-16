@@ -7,6 +7,9 @@ like Windows, macOS, and Linux.
 
 [![](https://github.com/smuel-adm/publicviewing-cli/actions/workflows/build.yml/badge.svg)](https://github.com/smuel-adm/publicviewing-cli/actions)
 [![](https://github.com/smuel-adm/publicviewing-cli/actions/workflows/release.yml/badge.svg)](https://github.com/smuel-adm/publicviewing-cli/releases)
+[![docs.rs](https://img.shields.io/docsrs/publicviewing-cli)](https://docs.rs/crate/publicviewing-cli/latest)
+[![Crates.io Version](https://img.shields.io/crates/v/publicviewing-cli)](https://crates.io/crates/publicviewing-cli)
+
 
 
 ## Usage
