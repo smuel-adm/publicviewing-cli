@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [1.4.0] - 2026-05-26
+
+### Update
+
+- Rust edition to 2024
+- anyhow to "1.0.102"
+- clap to "4.6.1"
+- tao to "0.35.3"
+- wry to "0.55.1"
+
 ## [1.3.3] - 2024-11-16
 
 ### Fixed

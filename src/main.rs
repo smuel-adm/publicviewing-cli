@@ -2,7 +2,6 @@
 mod command_line;
 
 use crate::command_line::run;
-use anyhow::Result;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -38,16 +37,14 @@ struct Cli {
     monitor: Option<usize>,
 }
 
-fn main() -> Result<()> {
+fn main() {
     let args = Cli::parse();
 
-    if let Err(err) = run(args) {
-        eprintln!("{:?}", err);
+    if let Err(err) = run(&args) {
+        eprintln!("{err:?}");
         err.chain()
             .skip(1)
-            .for_each(|cause| eprintln!("because: {}", cause));
+            .for_each(|cause| eprintln!("because: {cause}"));
         std::process::exit(1);
     }
-
-    Ok(())
 }
