@@ -1,11 +1,11 @@
 name: Release
 permissions:
   contents: write
-  
+
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   publish:
@@ -24,7 +24,7 @@ jobs:
             asset_name: publicviewing-cli-windows-amd64-${{  github.ref_name }}.zip
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install stable
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -52,7 +52,7 @@ jobs:
         if: contains(matrix.target, 'windows')
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.artifact_name }}
-          Copy-Item -Path CHANGELOG.md, LICENSE, README.md, target/${{ matrix.target }}/release/${{ matrix.artifact_name }}.exe -Destination ${{ matrix.artifact_name }} 
+          Copy-Item -Path CHANGELOG.md, LICENSE, README.md, target/${{ matrix.target }}/release/${{ matrix.artifact_name }}.exe -Destination ${{ matrix.artifact_name }}
           Compress-Archive -Path ${{ matrix.artifact_name }} -Destination ${{ matrix.asset_name }}
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
@@ -62,5 +62,3 @@ jobs:
           file: ${{ matrix.asset_name }}
           asset_name: ${{ matrix.asset_name }}
           release_name: ${{  github.ref_name }}
-
-
