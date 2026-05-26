@@ -8,13 +8,13 @@ use tao::{
     window::{Window, WindowBuilder},
 };
 
-use anyhow::anyhow;
 use anyhow::Result;
+use anyhow::anyhow;
 use wry::WebViewBuilder;
 
 use super::Cli;
 
-pub(crate) fn run(args: Cli) -> Result<()> {
+pub(crate) fn run(args: &Cli) -> Result<()> {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop)?;
     window.set_title("PublicViewing - Cli");
@@ -72,7 +72,7 @@ pub(crate) fn run(args: Cli) -> Result<()> {
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::NewEvents(StartCause::Init) => {
-            *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length)
+            *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length);
         }
         Event::NewEvents(StartCause::ResumeTimeReached { .. }) => {
             *control_flow = ControlFlow::WaitUntil(Instant::now() + timer_length);
