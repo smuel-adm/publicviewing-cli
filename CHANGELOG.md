@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Update
+
+- Github actions to "actions/checkout@v6"
+
 ## [1.4.0] - 2026-05-26
 
 ### Update

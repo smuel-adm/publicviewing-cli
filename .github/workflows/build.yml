@@ -3,8 +3,8 @@ name: Build
 on:
   pull_request:
     paths:
-      - 'src/**'
-      - 'Cargo.toml'
+      - "src/**"
+      - "Cargo.toml"
 
 jobs:
   test:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.platform.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install stable
         uses: dtolnay/rust-toolchain@stable
         with:
